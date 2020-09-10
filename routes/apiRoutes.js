@@ -9,7 +9,7 @@ module.exports = function(app) {
   app.get("/api/notes", function(req, res) {
 
     fs.readFileSync("./db/db.json", db);
-    res.json(db);
+    return res.json(db);
 
   });
 
@@ -27,7 +27,7 @@ module.exports = function(app) {
       if (err) throw err;
     });
 
-    res.json(addNote);
+    return res.json(addNote);
     
   });
 
@@ -39,7 +39,7 @@ module.exports = function(app) {
    
     for (let i = 0; i < db.length; i++) {
       let newNote = db[i]
-      if(noteId.indexof(newNote.id) !== -1) {
+      if(noteId.indexOf(newNote.id) !== -1) {
         db.splice(i, 1);
         i--;
 
