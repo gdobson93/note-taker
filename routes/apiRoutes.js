@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const db = require("../db/db.json");
 const fs = require("fs");
-const {v4:uuid} = require("uuid");
+const { v4: uuidv4 } = require("uuid");
 
 module.exports = function(app) {
 
@@ -27,20 +27,25 @@ module.exports = function(app) {
       if (err) throw err;
     });
 
-    res.json(db)
+    res.json(addNote);
     
   });
 
   app.delete("/api/notes/:id", function(req, res){
-    //read db.json file
+  
     fs.readFileSync("./db/db.json", db);
-    //make a new var and set the noteId = req.params.id
-    let noteId2 = req.params.id;
-    // start a for loop to filter through the saved notes on db.json
-
-    //    inside for loop, write if condition to match index of saved note with selected note to delete, then write file with omitted data - stays inside for loop
     
+    let noteId = req.params.id;
+   
+    for (let i = 0; i < db.length; i++) {
+      let newNote = db[i]
+      if(noteId.indexof(newNote.id) !== -1) {
+        db.splice(i, 1);
+        i--;
+
+        fs.writeFileSync("./db/db.json", JSON.stringify(db, null, 1), "utf-8");
+      }
+    }
     return res.json(db);
   });
-
 };
